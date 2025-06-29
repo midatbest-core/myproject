@@ -1,0 +1,35 @@
+<body>
+  <div class="wrapper">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <!-- ... existing main content ... -->
+        <div id="drawingPadArea"></div>
+        <button id="openPlaylistQuizBtn" class="btn premium-btn" style="margin:2rem auto 0 auto;display:block;max-width:340px;">🎵 Playlist Generator</button>
+        <div id="playlistQuizModal" class="premium-modal" style="display:none;">
+          <div class="premium-modal-content">
+            <span class="close" id="closePlaylistQuizModal">&times;</span>
+            <div id="playlistQuizContainer"></div>
+            <div id="playlistQuizResult"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+  <script src="footer.js"></script>
+</body>
+</html> 

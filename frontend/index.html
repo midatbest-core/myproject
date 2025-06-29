@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Spotify Playlist Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="wrapper">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="hero-wrapper">
+        <section class="welcome">
+          <div class="hero-image-container">
+            <!-- Removed <img class="hero-image" ...> for continuous background -->
+          </div>
+          <div class="welcome-content">
+            <h2>Welcome to SafeSpace</h2>
+            <p>Your personal space to log your emotions, talk to a supportive AI, and have fun with games. Take care of your mind, one day at a time.</p>
+            <div class="home-actions">
+              <a class="btn" href="mood.html"><i class="fa-solid fa-face-smile"></i> Log Your Mood</a>
+              <a class="btn" href="chat.html"><i class="fa-solid fa-gamepad"></i> Chat & Play</a>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- Article of the Day Section -->
+      <section id="article-of-the-day-section">
+        <div id="article-of-the-day"></div>
+      </section>
+      <div class="container1">
+        <section class="features-cards">
+          <div class="feature-card">
+            <div class="feature-icon feature-yellow"><i class="fa-solid fa-face-smile"></i></div>
+            <h3>Daily Mood Tracking</h3>
+            <p>Log your emotions with visual mood selectors and track patterns over time to better understand your mental wellness journey.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon feature-purple"><i class="fa-solid fa-comments"></i></div>
+            <h3>AI Companion</h3>
+            <p>Chat with a supportive AI that adapts to your mood and provides personalized, empathetic responses when you need someone to talk to.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon feature-pink"><i class="fa-solid fa-gamepad"></i></div>
+            <h3>Relaxing Games</h3>
+            <p>Take a mental break with engaging games like Tic-Tac-Toe and mindfulness quizzes designed to help you unwind and refocus.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+  <script src="footer.js"></script>
+  <script src="articleOfTheDay.js"></script>
+  <script src="main.js"></script>
+  <script>
+    function updateNav() {
+      const token = localStorage.getItem('token');
+      document.getElementById('loginLink').style.display = token ? 'none' : '';
+      document.getElementById('signupLink').style.display = token ? 'none' : '';
+      document.getElementById('logoutLink').style.display = token ? '' : 'none';
+      document.querySelector('a[href="mood.html"]').style.display = token ? '' : 'none';
+      document.querySelector('a[href="chat.html"]').style.display = token ? '' : 'none';
+      document.getElementById('profileLink').style.display = token ? '' : 'none';
+    }
+    document.getElementById('logoutLink').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      updateNav();
+      window.location.href = 'index.html';
+    };
+    updateNav();
+
+    async function getAIResponse(userMsg) {
+      // ... build contextPrompt as before ...
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const res = await fetch('http://localhost:3001/chat', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ prompt, userMessage: userMsg })
+      });
+      // ... rest of your code ...
+    }
+  </script>
+</body>
+</html> 

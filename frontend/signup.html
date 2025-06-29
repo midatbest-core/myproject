@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - SafeSpace</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+      <nav id="mainNav" class="main-nav">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+        <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+      </nav>
+    </div>
+  </header>
+  <main style="margin-top:5.5rem;">
+    <div class="auth-card">
+      <h2>Create Your Account</h2>
+      <form id="signupForm">
+        <input type="email" id="signupEmail" placeholder="Email" required />
+        <input type="password" id="signupPassword" placeholder="Password" required />
+        <button class="btn" type="submit">Sign Up</button>
+      </form>
+      <a class="auth-link" href="login.html">Already have an account? Login here.</a>
+      <div id="signupMsg"></div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2024 SafeSpace</p>
+  </footer>
+  
+  <!-- OTP Modal -->
+<div id="otpModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeOtpModal" class="close">&times;</span>
+    <h3>Enter OTP</h3>
+    <div class="otp-boxes">
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+       <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+    </div>
+
+    <button class="btn" id="verifyOtpBtn">Verify OTP</button>
+    <p id="otpMsg" style="margin-top: 10px;"></p>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); display: flex;
+    align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-content {
+    background-color: #fff; padding: 20px; border-radius: 8px;
+    width: 300px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  .close {
+    float: right; font-size: 20px; cursor: pointer;
+  }
+  .otp-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .otp-boxes input {
+    width: 40px;
+    height: 50px;
+    font-size: 24px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: border 0.2s ease;
+  }
+
+  .otp-boxes input:focus {
+    border-color: #6a4caf;
+    box-shadow: 0 0 5px rgba(106, 76, 175, 0.3);
+  }
+</style>
+<script>
+  const otpInputs = document.querySelectorAll('.otp-digit');
+  otpInputs.forEach((input, index) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/[^0-9]/g, ''); // Allow only digits
+    if (input.value.length === 1 && index < otpInputs.length - 1) {
+      otpInputs[index + 1].focus(); // Move to next box
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+      otpInputs[index - 1].focus(); // Move back on empty backspace
+    }
+  });
+});
+
+
+  let signupData = {};
+
+  document.getElementById('signupForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const msg = document.getElementById('signupMsg');
+    msg.textContent = '';
+    signupData = { email, password };
+
+    try {
+      const res = await fetch('http://localhost:3001/signup', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signupData)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        msg.style.color = 'green';
+        msg.textContent = 'OTP sent to your email.';
+        otpInputs[0].focus(); // ✅ auto-focus first input
+        document.getElementById('otpModal').style.display = 'flex';
+      } else {
+        msg.style.color = 'red';
+        msg.textContent = data.error || 'Signup failed.';
+      }
+    } catch (err) {
+      msg.style.color = 'red';
+      msg.textContent = 'Network error.';
+    }
+  };
+
+  document.getElementById('verifyOtpBtn').onclick = async function () {
+   const otp = Array.from(otpInputs).map(input => input.value).join('');
+    const otpMsg = document.getElementById('otpMsg');
+    otpMsg.textContent = '';
+
+    try {
+      const res = await fetch('http://localhost:3001/verify-otp', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...signupData, otp })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        otpMsg.style.color = 'green';
+        otpMsg.textContent = 'Account created successfully!';
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+      } else {
+        otpMsg.style.color = 'red';
+        otpMsg.textContent = data.error || 'Invalid OTP';
+      }
+    } catch (err) {
+      otpMsg.style.color = 'red';
+      otpMsg.textContent = 'Network error.';
+    }
+  };
+
+  document.getElementById('closeOtpModal').onclick = () => {
+    document.getElementById('otpModal').style.display = 'none';
+  };
+
+  function updateNav() {
+    const token = localStorage.getItem('token');
+    document.getElementById('loginLink').style.display = token ? 'none' : '';
+    document.getElementById('signupLink').style.display = token ? 'none' : '';
+    document.getElementById('logoutLink').style.display = token ? '' : 'none';
+  }
+
+  document.getElementById('logoutLink').onclick = function(e) {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    updateNav();
+    window.location.href = 'index.html';
+  };
+
+  updateNav();
+</script>
+</body>
+</html> 

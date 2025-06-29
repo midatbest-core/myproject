@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SafeSpace</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+      <nav id="mainNav" class="main-nav">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+        <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+      </nav>
+    </div>
+  </header>
+  <main style="margin-top:5.5rem;">
+    <div id="loginRedirectMsg" style="color:#6c63ff;font-weight:600;text-align:center;margin-bottom:1.2rem;"></div>
+    <div class="auth-card">
+      <h2>Login to Your Account</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button class="btn" type="submit">Login</button>
+      </form>
+      <a class="auth-link" href="signup.html">Don't have an account? Sign up here.</a>
+      <div id="loginMsg"></div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2024 SafeSpace</p>
+  </footer>
+  <script>
+    document.getElementById('loginForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const msg = document.getElementById('loginMsg');
+      msg.textContent = '';
+      try {
+        const res = await fetch('http://localhost:3001/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'index.html';
+        } else {
+          msg.style.color = 'red';
+          msg.textContent = data.error || 'Login failed.';
+        }
+      } catch (err) {
+        msg.style.color = 'red';
+        msg.textContent = 'Network error.';
+      }
+    };
+
+    function updateNav() {
+      const token = localStorage.getItem('token');
+      document.getElementById('loginLink').style.display = token ? 'none' : '';
+      document.getElementById('signupLink').style.display = token ? 'none' : '';
+      document.getElementById('logoutLink').style.display = token ? '' : 'none';
+    }
+    document.getElementById('logoutLink').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      updateNav();
+      window.location.href = 'index.html';
+    };
+    updateNav();
+
+    const msg = localStorage.getItem('loginRedirectMsg');
+    if (msg) {
+      document.getElementById('loginRedirectMsg').textContent = msg;
+      localStorage.removeItem('loginRedirectMsg');
+    }
+  </script>
+</body>
+</html> 

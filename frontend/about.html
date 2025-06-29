@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - SafeSpace</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="wrapper">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="about-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;background:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;"></div>
+      <div class="container about-card" style="max-width:600px;margin:7vh auto 2vh auto;background:rgba(255,255,255,0.92);border-radius:22px;box-shadow:0 8px 40px rgba(76,70,255,0.10);padding:2.5rem 2rem 2rem 2rem;backdrop-filter:blur(2px);">
+        <div style="text-align:center;">
+          <span style="font-size:3.5rem;color:#6c63ff;"><i class="fa-solid fa-leaf"></i></span>
+          <h1 style="color:#23243a;font-size:2.3rem;font-weight:700;margin:1.2rem 0 0.7rem 0;">Welcome to SafeSpace</h1>
+          <p style="font-size:1.18rem;color:#23243a;margin-bottom:1.7rem;">Your private, supportive space for mood tracking, journaling, and self-care.</p>
+        </div>
+        <div style="margin-bottom:2.2rem;">
+          <h2 style="color:#6c63ff;text-align:center;margin-bottom:1.1rem;font-size:1.35rem;">Our Mission</h2>
+          <p style="font-size:1.08rem;color:#23243a;text-align:center;">To empower you to understand your emotions, express yourself, and grow—at your own pace, in a safe and welcoming environment.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-bottom:2.2rem;">
+          <div style="flex:1 1 180px;min-width:160px;text-align:center;">
+            <span style="font-size:2.1rem;color:#6c63ff;"><i class="fa-solid fa-face-smile"></i></span>
+            <div style="font-weight:600;margin-top:0.5rem;">Mood Logging</div>
+            <div style="font-size:0.98rem;color:#23243a;">Track your feelings daily and spot trends over time.</div>
+          </div>
+          <div style="flex:1 1 180px;min-width:160px;text-align:center;">
+            <span style="font-size:2.1rem;color:#6c63ff;"><i class="fa-solid fa-book"></i></span>
+            <div style="font-weight:600;margin-top:0.5rem;">Journaling</div>
+            <div style="font-size:0.98rem;color:#23243a;">Reflect, write, and keep your thoughts private and secure.</div>
+          </div>
+          <div style="flex:1 1 180px;min-width:160px;text-align:center;">
+            <span style="font-size:2.1rem;color:#6c63ff;"><i class="fa-solid fa-comments"></i></span>
+            <div style="font-weight:600;margin-top:0.5rem;">AI Chat Companion</div>
+            <div style="font-size:0.98rem;color:#23243a;">Get support, encouragement, and a friendly chat anytime.</div>
+          </div>
+          <div style="flex:1 1 180px;min-width:160px;text-align:center;">
+            <span style="font-size:2.1rem;color:#6c63ff;"><i class="fa-solid fa-paint-brush"></i></span>
+            <div style="font-weight:600;margin-top:0.5rem;">Drawing Pad</div>
+            <div style="font-size:0.98rem;color:#23243a;">Express yourself visually and creatively.</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:2.5rem;">
+          <a href="index.html" class="btn" style="background:#6c63ff;color:#fff;min-width:200px;font-size:1.15rem;box-shadow:0 4px 24px rgba(108,99,255,0.10);">Back to Home</a>
+        </div>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+  <script src="footer.js"></script>
+</body>
+</html> 

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace - Mood Log History</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    #moodHistoryList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      margin-top: 1.5rem;
+    }
+    #moodHistoryList li {
+      background: #f0f1fa;
+      color: #23243a;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.08rem;
+      box-shadow: 0 2px 8px rgba(76, 70, 255, 0.07);
+      border: 1.5px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      word-break: break-word;
+    }
+    #moodHistoryList li strong {
+      color: #6c63ff;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <section class="modern-mood-log" style="max-width:600px;margin:7vh auto 2vh auto;">
+          <h2><i class="fa-solid fa-clock-rotate-left"></i> Your Mood Log History</h2>
+          <button class="btn" onclick="window.location.href='mood.html'" style="margin-bottom:1.5rem;"><i class="fa-solid fa-arrow-left"></i> Back to Mood Log</button>
+          <div id="moodCalendar" style="margin-bottom:2.5rem;"></div>
+          <div id="journalModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(24,28,36,0.85);justify-content:center;align-items:center;z-index:9999;">
+            <div style="background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(76,70,255,0.10);padding:2.5rem 2rem 2rem 2rem;max-width:500px;width:98vw;position:relative;">
+              <button id="closeJournalModalBtn" style="position:absolute;top:1rem;right:1rem;background:#e0e7ff;color:#6c63ff;border:none;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.3rem;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+              <div id="journalModalContent"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+  <script src="footer.js"></script>
+  <script>
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+    function updateNav() {
+      const token = localStorage.getItem('token');
+      document.getElementById('loginLink').style.display = token ? 'none' : '';
+      document.getElementById('signupLink').style.display = token ? 'none' : '';
+      document.getElementById('logoutLink').style.display = token ? '' : 'none';
+      document.getElementById('profileLink').style.display = token ? '' : 'none';
+    }
+    document.getElementById('logoutLink').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      updateNav();
+      window.location.href = 'index.html';
+    };
+    updateNav();
+    async function loadMoodHistory() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:3001/mood', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const moods = await res.json();
+      renderMoodCalendar(moods);
+    }
+    // Modal close logic
+    document.getElementById('closeJournalModalBtn').onclick = function() {
+      document.getElementById('journalModal').style.display = 'none';
+    };
+    // Mood to emoji map
+    const moodEmoji = {
+      'Amazing': '🤩', 'Happy': '😊', 'Okay': '😐', 'Sad': '😢', 'Anxious': '😰', 'Angry': '😡', 'Tired': '😴', 'Excited': '🤗', 'Calm': '😌', 'Confused': '😕', 'Motivated': '💪', 'Bored': '🥱'
+    };
+    // Render a simple calendar with emojis for moods
+    function renderMoodCalendar(moods, year, month) {
+      const calendarDiv = document.getElementById('moodCalendar');
+      if (!calendarDiv) return;
+      // Get all dates with moods
+      const moodByDate = {};
+      moods.forEach(m => {
+        if (m.date && m.mood) moodByDate[m.date.slice(0,10)] = m;
+      });
+      // Use provided year/month or default to current
+      const today = new Date();
+      year = typeof year === 'number' ? year : today.getFullYear();
+      month = typeof month === 'number' ? month : today.getMonth();
+      // Month/year header and nav
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      let html = `<div style='display:flex;align-items:center;justify-content:center;margin-bottom:1em;'>
+        <button id='prevMonthBtn' style='background:none;border:none;font-size:1.5em;color:#6c63ff;cursor:pointer;margin-right:1.2em;'>&lt;</button>
+        <span style='font-weight:700;font-size:1.15em;color:#23243a;'>${monthNames[month]} ${year}</span>
+        <button id='nextMonthBtn' style='background:none;border:none;font-size:1.5em;color:#6c63ff;cursor:pointer;margin-left:1.2em;'>&gt;</button>
+      </div>`;
+      // First day of month
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startDay = firstDay.getDay();
+      const daysInMonth = lastDay.getDate();
+      // Build calendar grid
+      html += `<div style='display:grid;grid-template-columns:repeat(7,2.7em);gap:0.2em;justify-content:center;background:#f6f8fc;padding:1.2em 0.5em 1.5em 0.5em;border-radius:14px;box-shadow:0 2px 12px rgba(76,70,255,0.07);margin:0 auto;max-width:24em;'>`;
+      const weekDays = ['S','M','T','W','T','F','S'];
+      weekDays.forEach(d => html += `<div style='font-weight:700;color:#6c63ff;text-align:center;padding-bottom:0.3em;'>${d}</div>`);
+      for (let i = 0; i < startDay; i++) html += `<div></div>`;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const mood = moods.find(m => {
+          if (!m.date) return false;
+          // Always compare only the date part, ignore time and timezone
+          let moodDateStr = typeof m.date === 'string' ? m.date.slice(0,10) : new Date(m.date).toISOString().slice(0,10);
+          return moodDateStr === dateStr;
+        });
+        if (mood) {
+          html += `<div class='calendar-emoji' data-date='${dateStr}' style='height:2.7em;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;cursor:pointer;transition:box-shadow 0.13s;background:#e0e7ff;'>
+            <span style='font-size:1.2em;'>${d}</span>
+            <span style='font-size:1.5em;line-height:1;'>${moodEmoji[mood.mood]||'❓'}</span>
+          </div>`;
+        } else {
+          html += `<div style='height:2.7em;display:flex;align-items:center;justify-content:center;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;color:#bbb;'><span style='font-size:1.1em;'>${d}</span></div>`;
+        }
+      }
+      html += `</div>`;
+      calendarDiv.innerHTML = html;
+      // Add click listeners
+      document.querySelectorAll('.calendar-emoji').forEach(el => {
+        el.onclick = function() {
+          const date = el.getAttribute('data-date');
+          const entry = moods.find(e => e.date && e.date.slice(0,10) === date);
+          const modal = document.getElementById('journalModal');
+          const content = document.getElementById('journalModalContent');
+          if (entry && entry.journalEntry) {
+            content.innerHTML = `
+              <div style='background:#f6f8fc;padding:2rem 1.5rem;border-radius:14px;max-width:420px;margin:0 auto;box-shadow:0 2px 12px rgba(76,70,255,0.07);color:#23243a;'>
+                <h3 style='color:#6c63ff;margin-bottom:1.2rem;'>Journal Entry</h3>
+                ${entry.journalTitle ? `<div style='font-weight:700;font-size:1.15rem;margin-bottom:0.7rem;'>${entry.journalTitle}</div>` : ''}
+                <div style='font-size:1.08rem;line-height:1.7;margin-bottom:1.2rem;'>${entry.journalEntry}</div>
+                ${entry.journalTags && entry.journalTags.length ? `<div style='margin-top:0.5rem;color:#6c63ff;font-size:0.98em;'>#${entry.journalTags.join(' #')}</div>` : ''}
+              </div>
+            `;
+          } else {
+            content.innerHTML = `<h3 style='color:#6c63ff;'>No Journal Entry for this day.</h3>`;
+          }
+          modal.style.display = 'flex';
+        };
+      });
+      // Add month navigation
+      document.getElementById('prevMonthBtn').onclick = function() {
+        renderMoodCalendar(moods, month === 0 ? year - 1 : year, month === 0 ? 11 : month - 1);
+      };
+      document.getElementById('nextMonthBtn').onclick = function() {
+        renderMoodCalendar(moods, month === 11 ? year + 1 : year, month === 11 ? 0 : month + 1);
+      };
+    }
+    loadMoodHistory();
+  </script>
+</body>
+</html> 

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace - Chatbot & Games</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="main-content-wrapper">
+        <div id="modeSelectContainer">
+          <div class="custom-select-label">Choose Chatbot Mode:</div>
+          <div class="custom-select-wrapper">
+            <div class="custom-select" id="botModeCustom">
+              <div class="custom-select-selected" id="botModeSelected">Listener</div>
+              <div class="custom-select-options" id="botModeOptions">
+                <div class="custom-select-option selected" data-value="listener">Listener</div>
+                <div class="custom-select-option" data-value="cheerleader">Cheerleader</div>
+                <div class="custom-select-option" data-value="advisor">Advisor</div>
+                 <div class="custom-select-option" data-value="partner">Partner</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section class="modern-chat-card">
+          <h2><i class="fa-solid fa-robot"></i> Chat with Your AI Companion</h2>
+            <div class="chat-actions">
+              <button class="btn" id="startChat"><i class="fa-solid fa-comments"></i> Start Chat</button><br><br>
+
+               <button class="btn" id="openDrawingPadBtn"><i class="fa-solid fa-pen-nib"></i> Open Drawing Pad</button><br><br>
+
+              <button class="btn" id="openPlaylistQuizBtn"><i class="fa-solid fa-music"></i> Playlist Generator</button><br><br>
+            </div>
+          <div id="chatContainer" style="display:none;">
+            <div id="chatMessages"></div>
+            <form id="chatForm">
+              <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" required />
+              <button class="btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            </form>
+          </div>
+          <input type="hidden" id="botMode" value="listener">
+        </section>
+        
+      <!-- Drawing Pad Modal -->
+      <div id="drawingPadModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(24,28,36,0.85);justify-content:center;align-items:center;">
+        <div style="background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(76,70,255,0.10);padding:2.5rem 2rem 2rem 2rem;max-width:900px;width:98vw;max-height:95vh;overflow:auto;position:relative;">
+          <button id="closeDrawingPadBtn" style="position:absolute;top:1rem;right:1rem;background:#e0e7ff;color:#6c63ff;border:none;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.3rem;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+          <h2 style="color:#6c63ff;"><i class="fa-solid fa-pen-nib"></i> Drawing Pad</h2>
+          <div id="drawingPadToolbar"></div>
+          <div id="color-picker"></div>
+          <div class="drawing-canvas-wrapper">
+            <div class="drawing-canvas-label">Your Drawing Area</div>
+            <canvas id="drawingCanvas" width="1100" height="600"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Add the premium modal for Playlist Quiz if not present -->
+      <div id="playlistQuizModal" class="premium-modal" style="display:none;">
+        <div class="premium-modal-content">
+          <span class="close" id="closePlaylistQuizModal">&times;</span>
+          <div id="playlistQuizContainer"></div>
+          <div id="playlistQuizResult"></div>
+        </div>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+ 
+  <script src="footer.js"></script>
+  <script src="chatbot.js"></script>
+  <!-- Fabric.js CDN for Drawing Pad -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <!-- Drawing Pad Logic (reuses drawingpad.js) -->
+  <script src="drawingpad.js"></script>
+  <script src="main.js"></script>
+  <script>
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+    function updateNav() {
+      const token = localStorage.getItem('token');
+      document.getElementById('loginLink').style.display = token ? 'none' : '';
+      document.getElementById('signupLink').style.display = token ? 'none' : '';
+      document.getElementById('logoutLink').style.display = token ? '' : 'none';
+      document.getElementById('profileLink').style.display = token ? '' : 'none';
+    }
+    document.getElementById('logoutLink').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      updateNav();
+      window.location.href = 'index.html';
+    };
+    updateNav();
+
+    // Custom dropdown logic
+    const customSelect = document.getElementById('botModeCustom');
+    const selected = document.getElementById('botModeSelected');
+    const options = document.getElementById('botModeOptions');
+    const hiddenInput = document.getElementById('botMode');
+    let currentValue = 'listener';
+
+    // Accessibility
+    customSelect.setAttribute('tabindex', '0');
+    customSelect.setAttribute('role', 'listbox');
+    selected.setAttribute('aria-haspopup', 'listbox');
+
+    function openDropdown() {
+      customSelect.classList.add('open');
+      options.style.display = 'block';
+    }
+    function closeDropdown() {
+      customSelect.classList.remove('open');
+      options.style.display = 'none';
+    }
+
+    customSelect.onclick = function(e) {
+      e.stopPropagation();
+      if (customSelect.classList.contains('open')) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    };
+    selected.onclick = function(e) {
+      e.stopPropagation();
+      if (customSelect.classList.contains('open')) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    };
+    document.querySelectorAll('.custom-select-option').forEach(opt => {
+      opt.onclick = function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        currentValue = opt.getAttribute('data-value');
+        selected.innerHTML = opt.innerHTML;
+        hiddenInput.value = currentValue;
+        closeDropdown();
+      };
+    });
+    // Optional: close dropdown on outside click
+    document.addEventListener('click', function(e) {
+      if (!customSelect.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+    // Keyboard accessibility
+    customSelect.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (customSelect.classList.contains('open')) {
+          closeDropdown();
+        } else {
+          openDropdown();
+        }
+      }
+      if (e.key === 'Escape') closeDropdown();
+    });
+    // Expose currentValue for chatbot.js or form
+    window.getBotMode = () => currentValue;
+
+    // Modal open/close logic
+    document.getElementById('openDrawingPadBtn').onclick = function() {
+      document.getElementById('drawingPadModal').style.display = 'flex';
+      setTimeout(() => {
+        if (window.initDrawingPad) window.initDrawingPad();
+      }, 100); // ensure DOM is ready
+    };
+    document.getElementById('closeDrawingPadBtn').onclick = function() {
+      document.getElementById('drawingPadModal').style.display = 'none';
+    };
+
+    // Movie/Series Generator (real API call)
+    document.getElementById('generateMovieBtn').onclick = async function() {
+      const prompt = document.getElementById('moviePrompt').value;
+      document.getElementById('movieResults').innerHTML = '<em>Generating suggestions for: ' + prompt + ' ...</em>';
+      try {
+        const res = await fetch(`/recommend/movies?genre=${encodeURIComponent(prompt)}`);
+        const data = await res.json();
+        if (data.movies && data.movies.length > 0) {
+          document.getElementById('movieResults').innerHTML =
+            '<ul>' +
+            data.movies.map(movie =>
+              `<li><strong>${movie.title}</strong> (${movie.release_date ? movie.release_date.slice(0,4) : 'N/A'}) - ${movie.overview ? movie.overview : ''}</li>`
+            ).join('') +
+            '</ul>';
+        } else {
+          document.getElementById('movieResults').innerHTML = '<em>No results found.</em>';
+        }
+      } catch (e) {
+        document.getElementById('movieResults').innerHTML = '<em>Error fetching suggestions.</em>';
+      }
+    };
+
+
+  </script>
+</body>
+</html> 

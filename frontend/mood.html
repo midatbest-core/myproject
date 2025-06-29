@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeSpace - Mood Log</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <!-- flatpickr Calendar CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div id="moodLoggedPopup" style="display:none;position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#6c63ff;color:#fff;padding:1rem 2rem;border-radius:12px;z-index:9999;font-size:1.15rem;box-shadow:0 2px 12px rgba(76,70,255,0.15);font-family:'Montserrat',Arial,sans-serif;">Mood logged!</div>
+    <!-- Add a modal for edit confirmation -->
+    <div id="editConfirmModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(24,28,36,0.85);justify-content:center;align-items:center;">
+      <div style="background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(76,70,255,0.10);padding:2.5rem 2rem 2rem 2rem;max-width:400px;width:98vw;position:relative;text-align:center;">
+        <p style="color:#23243a;font-size:1.15rem;margin-bottom:2rem;">Are you sure you want to edit an older mood log?</p>
+        <button id="editConfirmYes" class="btn" style="margin-right:1.2rem;">Yes</button>
+        <button id="editConfirmNo" class="btn secondary">No</button>
+      </div>
+    </div>
+    <header class="main-header">
+      <div class="header-content">
+        <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
+        <nav id="mainNav" class="main-nav">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a href="mood.html"><i class="fa-solid fa-face-smile"></i> Mood Log</a>
+          <a href="chat.html"><i class="fa-solid fa-comments"></i> Chatbot & Games</a>
+          <a href="profile.html" id="profileLink"><i class="fa-solid fa-user"></i> Profile</a>
+          <a href="login.html" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          <a href="signup.html" id="signupLink"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+          <a href="#" id="logoutLink" style="display:none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <section class="mood-log modern-mood-log">
+          <h2>How are you feeling today?</h2>
+          <p class="mood-subheadline">Select your current mood and add any thoughts you'd like to share.</p>
+          <div class="calendar-mood-container">
+            <input id="moodDate" class="calendar-input" placeholder="Select date" readonly>
+            <form id="moodForm">
+              <div class="mood-grid">
+                <button type="button" class="mood-btn" data-mood="Amazing">🤩<span>Amazing</span></button>
+                <button type="button" class="mood-btn" data-mood="Happy">😊<span>Happy</span></button>
+                <button type="button" class="mood-btn" data-mood="Okay">😐<span>Okay</span></button>
+                <button type="button" class="mood-btn" data-mood="Sad">😢<span>Sad</span></button>
+                <button type="button" class="mood-btn" data-mood="Anxious">😰<span>Anxious</span></button>
+                <button type="button" class="mood-btn" data-mood="Angry">😡<span>Angry</span></button>
+                <button type="button" class="mood-btn" data-mood="Tired">😴<span>Tired</span></button>
+                <button type="button" class="mood-btn" data-mood="Excited">🤗<span>Excited</span></button>
+                <button type="button" class="mood-btn" data-mood="Calm">😌<span>Calm</span></button>
+                <button type="button" class="mood-btn" data-mood="Confused">😕<span>Confused</span></button>
+                <button type="button" class="mood-btn" data-mood="Motivated">💪<span>Motivated</span></button>
+                <button type="button" class="mood-btn" data-mood="Bored">🥱<span>Bored</span></button>
+              </div>
+              <input type="hidden" id="moodSelect" required>
+              <input type="text" id="journalTitle" placeholder="Journal Title (optional)" class="calendar-input">
+              <textarea id="journalEntry" rows="5" placeholder="Write your journal..." class="calendar-input"></textarea>
+              <ul id="moodEntries" style="margin:1.2rem 0 1.2rem 0;"></ul>
+              <button type="submit" class="btn">Log Mood & Journal</button>
+            </form>
+          </div>
+          <a href="mood-history.html" class="btn secondary" id="viewMoodHistoryBtn" style="margin-top:1.2rem;"><i class="fa-solid fa-clock-rotate-left"></i> View Mood Log History</a>
+        </section>
+      </div>
+    </main>
+    <div id="footer-include"></div>
+  </div>
+  <script src="footer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="main.js"></script>
+  <script>
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+    function updateNav() {
+      const token = localStorage.getItem('token');
+      document.getElementById('loginLink').style.display = token ? 'none' : '';
+      document.getElementById('signupLink').style.display = token ? 'none' : '';
+      document.getElementById('logoutLink').style.display = token ? '' : 'none';
+    }
+    document.getElementById('logoutLink').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      updateNav();
+      window.location.href = 'index.html';
+    };
+    updateNav();
+    flatpickr("#moodDate", {dateFormat: "Y-m-d", defaultDate: new Date()});
+    // Mood button selection logic
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+      btn.onclick = function() {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('moodSelect').value = btn.getAttribute('data-mood');
+      };
+    });
+  </script>
+</body>
+</html> 
