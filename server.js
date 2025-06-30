@@ -61,7 +61,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
 app.use(cors({
-  origin: 'https://your-frontend.vercel.app', // <- update this after Vercel deploy
+  origin: 'https://myproject-vert-gamma.vercel.app', // <- update this after Vercel deploy
   credentials: true
 }));
 
