@@ -118,7 +118,7 @@
     signupData = { email, password };
 
     try {
-      const res = await fetch('http://localhost:3001/signup', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/signup', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -146,7 +146,7 @@
     otpMsg.textContent = '';
 
     try {
-      const res = await fetch('http://localhost:3001/verify-otp', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/verify-otp', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

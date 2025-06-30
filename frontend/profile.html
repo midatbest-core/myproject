@@ -58,7 +58,7 @@
         window.location.href = 'login.html';
         return;
       }
-      const res = await fetch('http://localhost:3001/profile', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/profile', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const data = await res.json();
@@ -71,7 +71,7 @@
     async function loadChatHistory() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:3001/profile/chats', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/profile/chats', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const chats = await res.json();
@@ -131,7 +131,7 @@
         return;
       }
       try {
-        const res = await fetch('http://localhost:3001/drawings', {
+        const res = await fetch('https://safespace-2x5n.onrender.com/drawings', {
           headers: { 'Authorization': 'Bearer ' + token }
         });
         if (res.ok) {
@@ -213,7 +213,7 @@
         return;
       }
       try {
-        const res = await fetch(`http://localhost:3001/drawings/${id}`, {
+        const res = await fetch(`'https://safespace-2x5n.onrender.com/drawings/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + token }
         });

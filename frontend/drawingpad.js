@@ -461,7 +461,9 @@ class DrawingPad {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3001/drawings', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/drawings', {
+        
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

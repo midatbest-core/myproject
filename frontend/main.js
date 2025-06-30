@@ -15,7 +15,7 @@ if (document.getElementById('moodForm')) {
   async function loadMoods() {
     const token = localStorage.getItem('token');
     if (!token) return;
-    const res = await fetch('http://localhost:3001/mood', {
+    const res = await fetch('https://safespace-2x5n.onrender.com/mood', {
       headers: { 'Authorization': 'Bearer ' + token }
     });
     allMoods = await res.json();
@@ -98,7 +98,8 @@ if (document.getElementById('moodForm')) {
     }
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3001/mood', {
+      const response = await fetch('https://safespace-2x5n.onrender.com/mood', {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,8 +138,9 @@ if (document.getElementById('moodForm')) {
       const journalTitleVal = journalTitle && journalTitle.value ? journalTitle.value.trim() : '';
       const journalEntryVal = journalEntry && journalEntry.value ? journalEntry.value.trim() : '';
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:3001/mood', {
+      await fetch('https://safespace-2x5n.onrender.com/mood', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -262,7 +264,7 @@ if (
     // Fetch latest moods before showing modal
     const token = localStorage.getItem('token');
     if (!token) return;
-    const res = await fetch('http://localhost:3001/mood', {
+    const res = await fetch('https://safespace-2x5n.onrender.com/mood', {
       headers: { 'Authorization': 'Bearer ' + token }
     });
     allMoods = await res.json();
@@ -371,8 +373,9 @@ function initPlaylistQuiz() {
     async function submitQuiz() {
       quizContainer.innerHTML = '<em>Generating your playlist...</em>';
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3001/playlist-quiz', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/playlist-quiz', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { 'Authorization': 'Bearer ' + token } : {})

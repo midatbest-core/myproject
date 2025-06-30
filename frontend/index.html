@@ -94,7 +94,8 @@
       const token = localStorage.getItem('token');
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
-      const res = await fetch('http://localhost:3001/chat', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/chat', {
+        credentials: 'include',
         method: 'POST',
         headers,
         body: JSON.stringify({ prompt, userMessage: userMsg })

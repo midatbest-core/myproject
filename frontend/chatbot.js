@@ -106,8 +106,9 @@ async function getAIResponse(userMsg) {
     const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('token');
     if (token) headers['Authorization'] = 'Bearer ' + token;
-    const res = await fetch('http://localhost:3001/chat', {
-      method: 'POST',
+    const res = await fetch('https://safespace-2x5n.onrender.com/chat', {
+        method: 'POST',
+        credentials: 'include',
       headers,
       body: JSON.stringify({ prompt, userMessage: userMsg })
     });

@@ -89,7 +89,7 @@
     async function loadMoodHistory() {
       const token = localStorage.getItem('token');
       if (!token) return;
-      const res = await fetch('http://localhost:3001/mood', {
+      const res = await fetch('https://safespace-2x5n.onrender.com/mood', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const moods = await res.json();

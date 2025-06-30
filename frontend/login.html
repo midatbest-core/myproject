@@ -43,8 +43,9 @@
       const msg = document.getElementById('loginMsg');
       msg.textContent = '';
       try {
-        const res = await fetch('http://localhost:3001/login', {
+        const res = await fetch('https://safespace-2x5n.onrender.com/login', {
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });

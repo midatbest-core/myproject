@@ -61,7 +61,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
 app.use(cors({
-  origin: 'http://localhost:5500', // Replace with your frontend URL
+  origin: 'https://your-frontend.vercel.app', // <- update this after Vercel deploy
   credentials: true
 }));
 
