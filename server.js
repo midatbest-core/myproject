@@ -65,9 +65,9 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 app.use(cors({
   origin: 'https://myproject-vert-gamma.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type']
 }));
 
 
@@ -208,6 +208,12 @@ app.post('/chat', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Error connecting to Groq API.', details: err.message });
   }
 });
+
+app.options('*', cors({
+  origin: 'https://myproject-vert-gamma.vercel.app',
+  credentials: true
+}));
+
 // Signup endpoint
 const passwordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
@@ -328,7 +334,7 @@ app.post('/verify-otp', async (req, res) => {
   console.log('Session ID at verify:', req.sessionID);
   console.log('Stored OTP on server:', req.session.otp);
   console.log('Received OTP from client:', req.body.otp);
-  console.log('Full session object:', req.session);
+console.log('Full session object:', req.session);
 
 
   res.json({ message: 'Account created successfully' });
