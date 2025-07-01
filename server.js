@@ -25,7 +25,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your_default_secret_here',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: true,
+        sameSite: 'none'
+    
+   }
 }));
 
 
@@ -170,6 +173,7 @@ app.post('/chat', requireAuth, async (req, res) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${groqApiKey}`
       },
+      credentials: 'include',
       body: JSON.stringify({
         model: 'llama3-8b-8192',
         messages: [
@@ -242,6 +246,8 @@ app.post('/signup', async (req, res) => {
     req.session.otp = otp;
     req.session.email = email;
     req.session.password = password;
+    req.session.otpGeneratedAt = Date.now(); // <-- add this
+
 
     
 
@@ -271,7 +277,7 @@ app.post('/signup', async (req, res) => {
 
       console.log('OTP sent successfully:', info);
       // Store the OTP in the user's session
-      req.session.otp = otp;
+      //req.session.otp = otp;
       // Return a response to the client
       res.status(200).json({ message: 'OTP sent to your email' });
 
@@ -289,12 +295,16 @@ app.post('/verify-otp', async (req, res) => {
   console.log('Session ID (verify-otp):', req.sessionID);
   console.log('Stored OTP on server:', req.session.otp);
   console.log('Received OTP from client:', otp);
+  const now = Date.now();
+    if (!req.session.otpGeneratedAt || now - req.session.otpGeneratedAt > 5 * 60 * 1000) {
+    return res.status(400).json({ error: 'OTP expired. Please sign up again.' });
+  }
+
 
   if (!otp) {
     return res.status(400).json({ error: 'OTP required' });
   }
-
-  if (parseInt(otp) !== req.session.otp) {
+  if (String(otp) !== String(req.session.otp)) {
     return res.status(401).json({ error: 'Invalid OTP' });
   }
 
@@ -792,6 +802,7 @@ app.post('/playlist-quiz', requireAuth, async (req, res) => {
     const groqApiKey = process.env.GROQ_API_KEY;
     const aiRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
+      Credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${groqApiKey}`
