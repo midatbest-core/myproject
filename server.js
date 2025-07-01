@@ -22,18 +22,14 @@ const MongoStore = require('connect-mongo');
 const PORT = 3001;
 const session = require('express-session');
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your_default_secret_here',
+  secret: process.env.SESSION_SECRET || 'fallback-key',
   resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
-    ttl: 2 * 60 * 60  // sessions valid for 2 hours
-  }),
+  saveUninitialized: true,
   cookie: {
     secure: true,
     sameSite: 'none'
   }
-}));;
+}));
 
 
 // Google Gemini API key from .env
@@ -281,34 +277,34 @@ app.post('/signup', async (req, res) => {
       subject: 'Verify your email address',
       text: `Your OTP is: ${otp}`,
     };
+transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.log('Error sending OTP:', error);
+    return res.status(500).json({ error: 'Failed to send OTP' });
+  }
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error sending OTP:', error);
-        return res.status(500).json({ error: 'Failed to send OTP' });
-      }
+  console.log('OTP sent successfully:', info);
+  console.log('OTP saved in session:', req.session.otp);
+  console.log('Session ID at signup:', req.sessionID);
+  console.log('Session after saving OTP:', req.session);
 
-      console.log('OTP sent successfully:', info);
-      // Store the OTP in the user's session
-      //req.session.otp = otp;
-      // Return a response to the client
-      res.status(200).json({ message: 'OTP sent to your email' });
+  res.status(200).json({ message: 'OTP sent to your email' });
+});
 
-    });
   } catch (err) {
     console.log('Error during signup:', err);
     res.status(500).json({ error: 'Signup failed.' });
   }
+  console.log('OTP saved:', otp);
+  console.log('Session ID at signup:', req.sessionID);
+  console.log('Session after saving OTP:', req.session);
+
 });
 
 // Verify OTP endpoint
 app.post('/verify-otp', async (req, res) => {
   const { otp } = req.body;
 
-  console.log('Session ID (verify-otp):', req.sessionID);
-  console.log('Stored OTP on server:', req.session.otp);
-  console.log('Received OTP from client:', otp);
-  
 
   if (!otp) {
     return res.status(400).json({ error: 'OTP required' });
@@ -329,6 +325,11 @@ app.post('/verify-otp', async (req, res) => {
   const hashed = await bcrypt.hash(password, 10);
   const user = await User.create({ email, password: hashed });
   console.log('User account created successfully.');
+  console.log('Session ID at verify:', req.sessionID);
+  console.log('Stored OTP on server:', req.session.otp);
+  console.log('Received OTP from client:', req.body.otp);
+  console.log('Full session object:', req.session);
+
 
   res.json({ message: 'Account created successfully' });
 });
