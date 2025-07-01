@@ -68,9 +68,12 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
 app.use(cors({
-  origin: 'https://myproject-vert-gamma.vercel.app', // <- update this after Vercel deploy
-  credentials: true
+  origin: 'https://myproject-vert-gamma.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
