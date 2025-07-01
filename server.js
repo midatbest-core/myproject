@@ -289,7 +289,7 @@ transporter.sendMail(mailOptions, (error, info) => {
     return res.status(500).json({ error: 'Failed to send OTP' });
   }
 
-  console.log('OTP sent successfully:', info);
+  cosonle.log('OTP sent successfully:', info);
   console.log('OTP saved in session:', req.session.otp);
   console.log('Session ID at signup:', req.sessionID);
   console.log('Session after saving OTP:', req.session);
@@ -300,10 +300,9 @@ transporter.sendMail(mailOptions, (error, info) => {
   } catch (err) {
     console.log('Error during signup:', err);
     res.status(500).json({ error: 'Signup failed.' });
+
   }
-  console.log('OTP saved:', otp);
-  console.log('Session ID at signup:', req.sessionID);
-  console.log('Session after saving OTP:', req.session);
+  
 
 });
 
@@ -334,7 +333,7 @@ app.post('/verify-otp', async (req, res) => {
   console.log('Session ID at verify:', req.sessionID);
   console.log('Stored OTP on server:', req.session.otp);
   console.log('Received OTP from client:', req.body.otp);
-console.log('Full session object:', req.session);
+ console.log('Full session object:', req.session);
 
 
   res.json({ message: 'Account created successfully' });
