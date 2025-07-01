@@ -289,7 +289,7 @@ transporter.sendMail(mailOptions, (error, info) => {
     return res.status(500).json({ error: 'Failed to send OTP' });
   }
 
-  cosonle.log('OTP sent successfully:', info);
+  console.log('OTP sent successfully:', info);
   console.log('OTP saved in session:', req.session.otp);
   console.log('Session ID at signup:', req.sessionID);
   console.log('Session after saving OTP:', req.session);
