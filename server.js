@@ -243,11 +243,17 @@ app.post('/signup', async (req, res) => {
     const otp = Math.floor(1000 + Math.random() * 9000);
     console.log('Session ID (signup):', req.sessionID);
     console.log('Generated OTP:', otp);
+    const now = Date.now();
+      if (req.session.lastOtpTime && now - req.session.lastOtpTime < 2 * 60 * 1000) {
+       const remaining = Math.ceil((2 * 60 * 1000 - (now - req.session.lastOtpTime)) / 1000);
+      return res.status(429).json({ error: `Please wait ${remaining} seconds before requesting another OTP.` });
+    }
+
     req.session.otp = otp;
     req.session.email = email;
     req.session.password = password;
-    req.session.otpGeneratedAt = Date.now(); // <-- add this
-
+    req.session.lastOtpTime = now; // ✅ set new cooldown marker
+    const user = new User({ email, password });
 
     
 
@@ -295,11 +301,7 @@ app.post('/verify-otp', async (req, res) => {
   console.log('Session ID (verify-otp):', req.sessionID);
   console.log('Stored OTP on server:', req.session.otp);
   console.log('Received OTP from client:', otp);
-  const now = Date.now();
-    if (!req.session.otpGeneratedAt || now - req.session.otpGeneratedAt > 5 * 60 * 1000) {
-    return res.status(400).json({ error: 'OTP expired. Please sign up again.' });
-  }
-
+  
 
   if (!otp) {
     return res.status(400).json({ error: 'OTP required' });
