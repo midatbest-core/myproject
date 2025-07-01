@@ -2,6 +2,7 @@
   "dependencies": {
     "axios": "^1.6.7",
     "bcryptjs": "^3.0.2",
+    "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dictionary-en": "^3.0.0",
     "didyoumean2": "^7.0.4",
