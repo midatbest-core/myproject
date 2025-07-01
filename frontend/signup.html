@@ -114,7 +114,10 @@
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
     const msg = document.getElementById('signupMsg');
+    const signupBtn = document.querySelector('#signupForm button');
     msg.textContent = '';
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Please wait (generating OTP)';
     signupData = { email, password };
 
     try {
@@ -134,9 +137,15 @@
         msg.style.color = 'red';
         msg.textContent = data.error || 'Signup failed.';
       }
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Sign Up';
+
     } catch (err) {
       msg.style.color = 'red';
       msg.textContent = 'Network error.';
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Sign Up';
+
     }
   };
 
@@ -150,7 +159,7 @@
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...signupData, otp })
+        body: JSON.stringify({ otp })
       });
       const data = await res.json();
       if (res.ok) {
