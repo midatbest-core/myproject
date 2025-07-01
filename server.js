@@ -313,9 +313,10 @@ app.post('/verify-otp', async (req, res) => {
   if (!otp) {
     return res.status(400).json({ error: 'OTP required' });
   }
-  if (String(otp) !== String(req.session.otp)) {
-    return res.status(401).json({ error: 'Invalid OTP' });
+  if (parseInt(otp) !== req.session.otp) {
+  return res.status(401).json({ error: 'Invalid OTP' });
   }
+
 
   // ✅ Use session-stored credentials
   const email = req.session.email;
