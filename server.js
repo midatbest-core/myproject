@@ -18,19 +18,24 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 const app = express();
 
-const MongoStore = require('connect-mongo');
+
 const PORT = 3001;
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-key',
   resave: false,
   saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI, // ensure this is set in Render
+    collectionName: 'sessions'
+  }),
   cookie: {
     secure: true,
     sameSite: 'none'
   }
 }));
-
 
 // Google Gemini API key from .env
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
