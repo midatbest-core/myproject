@@ -6,8 +6,7 @@
   <title>Login - SafeSpace</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+</head><body>
   <header class="main-header">
     <div class="container header-container">
       <h1 class="logo"><span class="logo-icon"><i class="fa-solid fa-leaf"></i></span> SafeSpace</h1>
@@ -25,7 +24,14 @@
       <h2>Login to Your Account</h2>
       <form id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email" required />
-        <input type="password" id="loginPassword" placeholder="Password" required />
+        <div class="password-wrapper">
+          <input type="password" id="loginPassword" placeholder="Password" required />
+          <span class="toggle-password" onclick="togglePassword('loginPassword', this)">
+            <i class="fa-solid fa-eye"></i>
+           </span>
+        </div>
+
+
         <button class="btn" type="submit">Login</button>
       </form>
       <a class="auth-link" href="signup.html">Don't have an account? Sign up here.</a>
@@ -82,6 +88,22 @@
       document.getElementById('loginRedirectMsg').textContent = msg;
       localStorage.removeItem('loginRedirectMsg');
     }
+   
+  function togglePassword(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    const icon = iconElement.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+
+
   </script>
 </body>
 </html> 

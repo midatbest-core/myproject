@@ -4986,3 +4986,31 @@ pre {
   opacity: 1;
   visibility: visible;
 }
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #777;
+}
+.password-wrapper {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 1.2rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+}
