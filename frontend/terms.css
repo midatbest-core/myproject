@@ -1,36 +1,126 @@
-.terms-wrapper {
-  max-width: 600px;
-  margin: 5vh auto 2vh auto;
-  padding: 0 1rem;
+.terms-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+}
+
+.terms-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .terms-title {
-  color: #6c63ff;
-  text-align: center;
-  margin-bottom: 1.5rem;
+    color: #6c63ff;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
 }
 
 .terms-date {
-  text-align: center;
-  color: #23243a;
-  font-size: 1.1rem;
-  margin-bottom: 2.2rem;
+    color: #666;
+    font-size: 1.1rem;
 }
 
-.terms-text {
-  font-size: 1.13rem;
-  margin-bottom: 1.7rem;
+.terms-intro {
+    font-size: 1.2rem;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 2rem;
 }
 
 .terms-section {
-  color: #6c63ff;
-  margin-top: 2.2rem;
-  margin-bottom: 0.7rem;
+    margin: 2.5rem 0;
+}
+
+.terms-section-title {
+    color: #6c63ff;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.terms-section-title i {
+    font-size: 1.3rem;
 }
 
 .terms-list {
-  margin-bottom: 1.5rem;
-  font-size: 1.08rem;
-  line-height: 1.7;
-  padding-left: 1.2rem;
+    list-style: none;
+    padding-left: 2rem;
+}
+
+.terms-list li {
+    position: relative;
+    padding: 0.8rem 0;
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.7;
+}
+
+.terms-list li::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 1.2rem;
+    width: 8px;
+    height: 8px;
+    background: #6c63ff;
+    border-radius: 50%;
+}
+
+.terms-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f0f0f0;
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .terms-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .terms-title {
+        font-size: 2rem;
+    }
+
+    .terms-section-title {
+        font-size: 1.3rem;
+    }
+
+    .terms-list li {
+        font-size: 1rem;
+    }
+}
+
+/* Hover effects */
+.terms-list li:hover {
+    transform: translateX(5px);
+    transition: transform 0.3s ease;
+}
+
+/* Print styles */
+@media print {
+    .terms-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 1rem;
+    }
+
+    .terms-list li::before {
+        background: #000;
+    }
+
+    .terms-section-title {
+        color: #000;
+    }
 }
