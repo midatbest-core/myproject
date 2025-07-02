@@ -17,6 +17,7 @@ const dictionary = require('dictionary-en');
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 const app = express();
+app.set('trust proxy', 1);
 
 
 const PORT = 3001;
@@ -29,11 +30,15 @@ app.use(session({
   saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI, // ensure this is set in Render
-    collectionName: 'sessions'
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60
   }),
   cookie: {
     secure: true,
-    sameSite: 'none'
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000,
+   
+
   }
 }));
 
@@ -69,12 +74,11 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
 app.use(cors({
-  origin: 'https://myproject-vert-gamma.vercel.app',
+  origin: ['https://myproject-vert-gamma.vercel.app'],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
@@ -283,7 +287,7 @@ app.post('/signup', async (req, res) => {
     });
 
     const mailOptions = {
-      from: 'your-email@gmail.com',
+      from: 'safespacefeedback@gmail.com',
       to: email,
       subject: 'Verify your email address',
       text: `Your OTP is: ${otp}`,
