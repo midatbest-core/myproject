@@ -476,7 +476,7 @@ body {
 
 main > .container {
   display: flex !important;
-  flex-direction: row !important;
+  flex-direction: column !important;
   flex-wrap: nowrap !important;
   align-items: stretch !important;
   justify-content: space-between !important;
