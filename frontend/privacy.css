@@ -82,6 +82,7 @@ body {
   font-size: 1.08rem;
   line-height: 1.7;
   position: relative;
+  color: #23243a;
 }
 
 .privacy-list li::before {
